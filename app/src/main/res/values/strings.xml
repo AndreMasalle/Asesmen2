@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Asesmen2</string>
+    <string name="List_kosong">Belum ada data</string>
+    <string name="x_diklik">%1$s diklik!</string>
+    <string name="tambah_kontak">Tambahkan kontak</string>
+    <string name="nama">Nama</string>
+    <string name="nomor">Nomor</string>
+    <string name="email">Email</string>
+    <string name="kembali">Kembali</string>
+    <string name="simpan">Simpan</string>
+    <string name="edit_kontak">Edit kontak</string>
+    <string name="kontak">Kontak</string>
+</resources>
