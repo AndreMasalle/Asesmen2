@@ -6,24 +6,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Create
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -37,8 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,6 +59,8 @@ fun ContactScreen(navController: NavHostController, id: Long? = null) {
     var nama by remember { mutableStateOf("") }
     var nomor by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+
+    var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(true){
         if (id==null) return@LaunchedEffect
@@ -110,6 +108,18 @@ fun ContactScreen(navController: NavHostController, id: Long? = null) {
                     }
                     if (id!=null){
                         DeleteAction {
+                            showDialog = true
+                        }
+                        DisplayAlertDialog(
+                            openDialog = showDialog,
+                            onDismissRequest = { showDialog = false },
+                            onConfirmation = {
+                                viewModel.delete(id)
+                                navController.popBackStack()
+                            }
+                        )
+                        {
+                            showDialog = false
                             viewModel.delete(id)
                             navController.popBackStack()
                         }
@@ -164,6 +174,30 @@ fun FormContact(
         )
 
 
+    }
+}
+
+@Composable
+fun DisplayAlertDialog(
+    openDialog: Boolean,
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    function: () -> Unit
+) {
+    if (openDialog){
+        AlertDialog(
+            text = { Text(text = stringResource(id = R.string.hapus_kontak))},
+            confirmButton = { TextButton(onClick = { onConfirmation() }) {
+                Text(text = stringResource(id = R.string.hapus))
+            }
+            },
+            dismissButton = { TextButton(onClick = { onDismissRequest()}) {
+                Text(text = stringResource(id = R.string.batal))
+            }
+            },
+            onDismissRequest = { /*TODO*/ }
+
+        )
     }
 }
 
