@@ -10,7 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -87,8 +91,8 @@ fun UbahScreen(navController: NavHostController, id: Long? = null) {
                 actions = {
                     IconButton(
                         onClick = {
-                            if (nomor == "" || email == ""){
-                                Toast.makeText(context, R.string.invalid, Toast.LENGTH_LONG).show()
+                            if (nama=="" || nomor == "" || email == ""){
+                                Toast.makeText(context, R.string.invalid_data, Toast.LENGTH_LONG).show()
                                 return@IconButton
                             }
 
@@ -120,6 +124,8 @@ fun UbahScreen(navController: NavHostController, id: Long? = null) {
         )
     }
 }
+
+
 
 
 @Composable
