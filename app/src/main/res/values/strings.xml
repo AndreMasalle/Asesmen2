@@ -10,4 +10,5 @@
     <string name="simpan">Simpan</string>
     <string name="edit_kontak">Edit kontak</string>
     <string name="kontak">Kontak</string>
+    <string name="invalid">Nomor dan email tidak boleh kosong</string>
 </resources>

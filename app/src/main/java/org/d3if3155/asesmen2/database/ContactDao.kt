@@ -19,7 +19,11 @@ interface ContactDao {
     @Query("SELECT*FROM contact ORDER BY nama")
     fun getKontak(): kotlinx.coroutines.flow.Flow<List<Contact>>
 
+    @Query("SELECT * FROM contact WHERE id =:id")
+    suspend fun getKontakById(id: Long): Contact?
 
+    @Query("DELETE FROM contact WHERE id =:id")
+    suspend fun deleteById(id: Long)
 
 
 }

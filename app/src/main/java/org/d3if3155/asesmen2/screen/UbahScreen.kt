@@ -1,6 +1,7 @@
 package org.d3if3155.asesmen2.screen
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,11 +21,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -34,20 +37,26 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.d3if3155.asesmen2.R
+import org.d3if3155.asesmen2.database.ContactDb
 import org.d3if3155.asesmen2.ui.theme.Asesmen2Theme
+import org.d3if3155.asesmen2.util.ViewModelFactory
 
 const val KEY_ID_UBAH_KONTAK = "idUbahKontak"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UbahScreen(navController: NavHostController, id: Long? = null) {
-    val viewModel: UbahViewModel = viewModel()
+    val context = LocalContext.current
+    val db = ContactDb.getInstance(context)
+    val factory = ViewModelFactory(db.dao)
+    val viewModel: ContactViewModel = viewModel(factory = factory)
 
     var nama by remember { mutableStateOf("") }
     var nomor by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
 
-    if(id != null){
-        val data =viewModel.getContact(id)
+    LaunchedEffect(true){
+        if (id==null) return@LaunchedEffect
+        val data =viewModel.getContact(id) ?: return@LaunchedEffect
         nama = data.nama
         nomor = data.nomor
         email = data.email
@@ -76,9 +85,20 @@ fun UbahScreen(navController: NavHostController, id: Long? = null) {
                     titleContentColor = MaterialTheme.colorScheme.primary
                 ),
                 actions = {
-                    IconButton(onClick = {navController.popBackStack()}) {
-//                        Setelah di-klik akan menyimpan catatan ke db
-//                        Kemudian akan kembali ke layar utama (penjelasan popbackstack di "simpan")
+                    IconButton(
+                        onClick = {
+                            if (nomor == "" || email == ""){
+                                Toast.makeText(context, R.string.invalid, Toast.LENGTH_LONG).show()
+                                return@IconButton
+                            }
+
+                            if (id==null){
+                                viewModel.insert(nama,nomor,email)
+                            }else{
+                                viewModel.update(id,nama,nomor,email)
+                            }
+                            navController.popBackStack()
+                        }) {
                         Icon(
                             imageVector = Icons.Outlined.Check,
                             contentDescription = stringResource(R.string.simpan),

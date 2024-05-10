@@ -10,25 +10,27 @@ import org.d3if3155.asesmen2.data.Contact
 abstract class ContactDb : RoomDatabase(){
     abstract val dao: ContactDao
 
-    companion object
+    companion object{
+        @Volatile
+        private var INSTANCE : ContactDb? = null
 
-    @Volatile
-    private var INSTANCE : ContactDb? = null
+        fun getInstance(context: Context): ContactDb{
+            synchronized(this){
+                var instance = INSTANCE
 
-    fun getInstance(context: Context): ContactDb{
-        synchronized(this){
-            var instance = INSTANCE
+                if (instance== null){
+                    instance = Room.databaseBuilder(
+                        context.applicationContext,
+                        ContactDb::class.java,
+                        "catatan.db"
+                    ).build()
+                    INSTANCE = instance
+                }
+                return instance
 
-            if (instance== null){
-                instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    ContactDb::class.java,
-                    "catatan.db"
-                ).build()
-                INSTANCE = instance
             }
-            return instance
-
         }
     }
+
+
 }
