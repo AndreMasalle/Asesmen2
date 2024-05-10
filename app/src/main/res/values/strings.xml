@@ -14,4 +14,6 @@
     <string name="hapus">Hapus</string>
     <string name="batal">Batal</string>
     <string name="opsi_lain">Opsi lainnya</string>
+    <string name="view_list">List view</string>
+    <string name="view_grid">Grid view</string>
 </resources>
